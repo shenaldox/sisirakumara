@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.R. Sisira Kumara | Media & Communication Tutor</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #050507;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --primary: #6366f1; /* Indigo */
+            --accent: #a855f7; /* Purple */
+            --neon: #00f2ff; /* Cyan */
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-head: 'Outfit', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* --- Typography & Utilities --- */
+        h1, h2, h3, h4 {
+            font-family: var(--font-head);
+            font-weight: 700;
+            line-height: 1.1;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, var(--neon) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        /* --- Background Ambience --- */
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* --- NEAT HEADER STYLES --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 0;
+            z-index: 100;
+            transition: 0.3s ease;
+            backdrop-filter: blur(10px);
+            background: rgba(5, 5, 7, 0.6); /* Slightly solid base for readability */
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        nav.scrolled {
+            padding: 15px 0;
+            background: rgba(5, 5, 7, 0.95);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: white;
+            text-decoration: none;
+            z-index: 101;
+        }
+
+        /* Navigation List */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active {
+            color: var(--neon);
+        }
+
+        /* Chatroom Button Style */
+        .btn-chatroom {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border: 1px solid var(--neon);
+            border-radius: 50px;
+            color: var(--neon) !important;
+            font-weight: 600;
+            background: rgba(0, 242, 255, 0.05);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-chatroom:hover {
+            background: var(--neon);
+            color: #000 !important;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Toggle Button */
+        .mobile-toggle {
+            display: none;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                background: rgba(10, 10, 12, 0.95);
+                backdrop-filter: blur(15px);
+                border-bottom: 1px solid var(--glass-border);
+                padding: 30px;
+                gap: 20px;
+                
+                /* Animation State */
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); /* Hidden initially */
+                transition: clip-path 0.4s ease-in-out;
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); /* Fully visible */
+            }
+
+            .nav-links li {
+                width: 100%;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+                padding-bottom: 10px;
+            }
+            
+            .nav-links li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-links li a {
+                display: block;
+                font-size: 1.1rem;
+            }
+
+            .btn-chatroom {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 100px; /* Increased padding for fixed header */
+        }
+
+        .hero-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            margin-bottom: 20px;
+            opacity: 0; 
+            transform: translateY(30px);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .btn-cta {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .btn-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.6);
+        }
+
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tutor-frame {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 30px;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: translateX(50px);
+            transform-style: preserve-3d;
+        }
+
+        .tutor-img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            display: block;
+            filter: brightness(0.95) contrast(1.05);
+            transition: transform 0.5s ease;
+        }
+
+        .tutor-frame:hover .tutor-img {
+            transform: scale(1.02);
+        }
+
+        .parallax-shape {
+            position: absolute;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        /* --- Cards & Sections --- */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px 30px;
+            backdrop-filter: blur(10px);
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon);
+            box-shadow: 0 10px 40px rgba(0, 242, 255, 0.1);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .card ul {
+            list-style: none;
+            color: var(--text-muted);
+        }
+
+        .card ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card ul li i {
+            color: var(--neon);
+        }
+
+        /* --- Certifications --- */
+        .cert-badge {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .cert-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        /* --- Application Form --- */
+        .form-container {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+
+        /* --- Floating WhatsApp --- */
+        .fab-whatsapp {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+            z-index: 100;
+            text-decoration: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* --- Success Modal --- */
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .success-content {
+            text-align: center;
+            transform: scale(0.8);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #25D366;
+            margin-bottom: 20px;
+        }
+
+        /* --- Credits Section --- */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 50px 0;
+            text-align: center;
+            margin-top: 50px;
+            background: #020203;
+        }
+
+        .credit-card {
+            display: inline-block;
+            padding: 20px 40px;
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            margin-top: 20px;
+            background: rgba(255,255,255,0.02);
+        }
+        
+        .credit-link {
+            color: var(--neon);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* --- Mobile Layout Adjustments --- */
+        @media (max-width: 992px) {
+            .hero-layout {
+                flex-direction: column-reverse; 
+                text-align: center;
+                gap: 40px;
+            }
+
+            .hero-text {
+                max-width: 100%;
+            }
+
+            .hero h1 { font-size: 2.8rem; }
+            
+            .tutor-frame {
+                margin: 0 auto;
+                transform: translateY(50px);
+            }
+
+            .form-container { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background -->
+    <div class="ambient-glow"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-content">
+            <a href="#" class="logo">MR.SISIRA<span style="color:var(--neon)">.</span></a>
+            
+            <!-- Hamburger Icon -->
+            <div class="mobile-toggle" id="mobileToggle">
+                <i class="ri-menu-4-line"></i>
+            </div>
+
+            <!-- Navigation Links -->
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about">About</a></li>
+                <li><a href="#classes">Classes</a></li>
+                <li><a href="#certifications">Experience</a></li>
+                <li><a href="#apply">Apply</a></li>
+                <!-- Chatroom Button inside nav -->
+                <li>
+                    <a href="https://shenaldox.github.io/chatroom2/" target="_blank" class="btn-chatroom">
+                        <i class="ri-chat-smile-3-line"></i> Chatroom
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="parallax-shape" id="shape1" style="top: 20%; left: 5%; font-size: 8rem; opacity: 0.05;"><i class="ri-film-line"></i></div>
+        <div class="parallax-shape" id="shape2" style="bottom: 10%; right: 5%; font-size: 6rem; opacity: 0.05; color: var(--accent);"><i class="ri-mic-2-line"></i></div>
+
+        <div class="container hero-layout">
+            
+            <div class="hero-text">
+                <h4>Tutor Profile</h4>
+                <h1>M.R. Sisira Kumara</h1>
+                <p>Expert Guidance in Media & Communication Studies. Unlock your potential with premium, interactive learning.</p>
+                <a href="#apply" class="btn-cta">Start Learning</a>
+            </div>
+
+            <div class="hero-visual">
+                <div class="tutor-frame">
+                    <img src="https://z-cdn-media.chatglm.cn/files/aff994d5-7101-4e62-a2a2-6d36e39bd2e3.jpg?auth_key=1868445618-2bab9cc486e547a18e192b55b460a9b4-0-92c806520c15bcc990f845875b752352" alt="M.R. Sisira Kumara" class="tutor-img">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- About / Certifications -->
+    <section id="certifications" class="section-padding">
+        <div class="container">
+            <h2 class="reveal-text">Experience & <span class="gradient-text">Certifications</span></h2>
+            <div class="grid-3">
+                <div class="card fade-up">
+                    <div class="cert-badge">
+                        <i class="ri-medal-line cert-icon"></i>
+                        <div>
+                            <h3>8 Years Exp.</h3>
+                            <p class="text-muted">Proven track record of student success in Media Studies.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card fade-up">
+                    <div class="cert-badge">
+                        <i class="ri-book-open-line cert-icon"></i>
+                        <div>
+                            <h3>Diploma Qualified</h3>
+                            <p class="text-muted">Fully certified with relevant academic qualifications.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card fade-up">
+                    <div class="cert-badge">
+                        <i class="ri-group-line cert-icon"></i>
+                        <div>
+                            <h3>Modern Techniques</h3>
+                            <p class="text-muted">Using interactive, media-rich teaching methods.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classes Section -->
+    <section id="classes" class="section-padding">
+        <div class="container">
+            <h2 class="reveal-text">Classes <span class="gradient-text">Offered</span></h2>
+            <div class="grid-3">
+                <div class="card fade-up">
+                    <h3>Grade 10 – 11</h3>
+                    <h4 style="color:var(--neon); margin-bottom:15px;">Media & Communication</h4>
+                    <ul>
+                        <li><i class="ri-checkbox-circle-line"></i> Group Classes</li>
+                        <li><i class="ri-checkbox-circle-line"></i> Individual Classes</li>
+                        <li><i class="ri-checkbox-circle-line"></i> Online Classes</li>
+                    </ul>
+                </div>
+
+                <div class="card fade-up">
+                    <h3>Grade 12 – 13</h3>
+                    <h4 style="color:var(--accent); margin-bottom:15px;">Media Studies</h4>
+                    <ul>
+                        <li><i class="ri-checkbox-circle-line"></i> Group Classes</li>
+                        <li><i class="ri-checkbox-circle-line"></i> Individual Classes</li>
+                        <li><i class="ri-checkbox-circle-line"></i> Online Classes</li>
+                    </ul>
+                </div>
+
+                <div class="card fade-up" style="display:flex; flex-direction:column; justify-content:center;">
+                    <h3>Contact Direct</h3>
+                    <p style="margin-bottom: 20px; color:var(--text-muted);">Call for inquiries or class schedules.</p>
+                    <a href="tel:0714718191" style="font-size:1.5rem; font-weight:bold; color:white; text-decoration:none; margin-bottom:10px;">
+                        071 471 8191
+                    </a>
+                    <div style="display:flex; gap:10px;">
+                        <span style="background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:5px; font-size:0.8rem;">Available 24/7</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form -->
+    <section id="apply" class="section-padding">
+        <div class="container">
+            <h2 class="reveal-text" style="text-align: center; margin-bottom: 40px;">Student <span class="gradient-text">Application</span></h2>
+            
+            <div class="form-container fade-up">
+                <form id="studentForm">
+                    <div class="grid-3" style="grid-template-columns: 1fr 1fr; gap: 20px; margin-top:0;">
+                        <div class="form-group">
+                            <label>Student Name</label>
+                            <input type="text" id="sName" class="form-control" placeholder="Enter full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Grade</label>
+                            <select id="sGrade" class="form-control" required>
+                                <option value="">Select Grade</option>
+                                <option value="Grade 10">Grade 10</option>
+                                <option value="Grade 11">Grade 11</option>
+                                <option value="Grade 12">Grade 12</option>
+                                <option value="Grade 13">Grade 13</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-3" style="grid-template-columns: 1fr 1fr; gap: 20px; margin-top:0;">
+                        <div class="form-group">
+                            <label>Subject (Auto-selected based on grade)</label>
+                            <input type="text" id="sSubject" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Class Type</label>
+                            <select id="sType" class="form-control" required>
+                                <option value="Group Class">Group Class</option>
+                                <option value="Individual Class">Individual Class</option>
+                                <option value="Online Class">Online Class</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-3" style="grid-template-columns: 1fr 1fr; gap: 20px; margin-top:0;">
+                        <div class="form-group">
+                            <label>Parent Contact Number</label>
+                            <input type="tel" id="pContact" class="form-control" placeholder="07x xxxxxxx" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Student WhatsApp Number</label>
+                            <input type="tel" id="sWhatsapp" class="form-control" placeholder="07x xxxxxxx" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Message / Notes</label>
+                        <textarea id="sMessage" class="form-control" rows="4" placeholder="Any specific requirements?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-cta" style="width: 100%; border:none; cursor:pointer; opacity:1; transform:none;">Apply via WhatsApp</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credits Footer -->
+    <footer>
+        <div class="container">
+            <div class="credit-card reveal-text">
+                <h3>Website Created By</h3>
+                <h2 style="color:var(--neon); margin: 10px 0;">Shenal Anuhas</h2>
+                <p>Age: 15+</p>
+                <br>
+                <a href="https://t.me/Crypto_RIV" target="_blank" class="credit-link">
+                    <i class="ri-telegram-fill"></i> Contact Developer
+                </a>
+            </div>
+            <p style="margin-top: 30px; font-size: 0.8rem; color: #555;">&copy; 2023 M.R. Sisira Kumara. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/+94714718191" target="_blank" class="fab-whatsapp">
+        <i class="ri-whatsapp-line"></i>
+    </a>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <i class="ri-checkbox-circle-fill success-icon"></i>
+            <h2>Application Sent!</h2>
+            <p style="color: #ccc; margin-top: 10px;">Redirecting to WhatsApp now...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Register GSAP Plugins
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        // --- Interaction Logic: Mobile Toggle ---
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            
+            // Switch Icon
+            const icon = mobileToggle.querySelector('i');
+            if(navLinks.classList.contains('active')) {
+                icon.classList.remove('ri-menu-4-line');
+                icon.classList.add('ri-close-line');
+            } else {
+                icon.classList.remove('ri-close-line');
+                icon.classList.add('ri-menu-4-line');
+            }
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.nav-links li a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = mobileToggle.querySelector('i');
+                icon.classList.remove('ri-close-line');
+                icon.classList.add('ri-menu-4-line');
+            });
+        });
+
+        // --- Interaction Logic: Form Handling ---
+        const gradeSelect = document.getElementById('sGrade');
+        const subjectInput = document.getElementById('sSubject');
+
+        gradeSelect.addEventListener('change', function() {
+            const grade = this.value;
+            if(grade === 'Grade 10' || grade === 'Grade 11') {
+                subjectInput.value = 'Media & Communication';
+            } else if (grade === 'Grade 12' || grade === 'Grade 13') {
+                subjectInput.value = 'Media';
+            } else {
+                subjectInput.value = '';
+            }
+            gsap.fromTo(subjectInput, {scale: 0.95}, {scale: 1, duration: 0.2, ease: "back.out(1.7)"});
+        });
+
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('sName').value;
+            const grade = document.getElementById('sGrade').value;
+            const subject = document.getElementById('sSubject').value;
+            const type = document.getElementById('sType').value;
+            const parentContact = document.getElementById('pContact').value;
+            const studentWhatsapp = document.getElementById('sWhatsapp').value;
+            const message = document.getElementById('sMessage').value;
+
+            const text = `*New Student Application*
+---------------------------
+*Student Name:* ${name}
+*Grade:* ${grade}
+*Subject:* ${subject}
+*Class Type:* ${type}
+*Parent Contact:* ${parentContact}
+*Student WhatsApp:* ${studentWhatsapp}
+*Notes:* ${message}
+---------------------------
+*Sent via Website Form*`;
+
+            const url = `https://wa.me/+94714718191?text=${encodeURIComponent(text)}`;
+            const modal = document.getElementById('successModal');
+            const tl = gsap.timeline();
+
+            tl.to(modal, {visibility: 'visible', opacity: 1, duration: 0.3})
+              .to('.success-content', {scale: 1, duration: 0.4, ease: "back.out(1.7)"}, "<");
+
+            setTimeout(() => {
+                window.open(url, '_blank');
+                gsap.to(modal, {opacity: 0, duration: 0.3, onComplete: () => modal.style.visibility = 'hidden'});
+                document.getElementById('studentForm').reset();
+            }, 2000);
+        });
+
+        // --- Visual Logic: Animations ---
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if(window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        const heroTl = gsap.timeline();
+        heroTl.to('.hero h1', {opacity: 1, y: 0, duration: 1, ease: "power3.out"})
+              .to('.hero p', {opacity: 1, y: 0, duration: 1, ease: "power3.out"}, "-=0.7")
+              .to('.btn-cta', {opacity: 1, y: 0, duration: 0.8, ease: "back.out(1.7)"}, "-=0.7")
+              .to('.tutor-frame', {opacity: 1, x: 0, duration: 1.2, ease: "power3.out"}, "-=1.0");
+
+        gsap.to("#shape1", {
+            y: -100,
+            x: 50,
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1
+            }
+        });
+        gsap.to("#shape2", {
+            y: 100,
+            x: -50,
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1
+            }
+        });
+
+        const fadeElements = document.querySelectorAll('.fade-up');
+        fadeElements.forEach(el => {
+            gsap.fromTo(el, 
+                { opacity: 0, y: 50 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 85%",
+                    }
+                }
+            );
+        });
+
+        const revealTexts = document.querySelectorAll('.reveal-text');
+        revealTexts.forEach(el => {
+            gsap.fromTo(el,
+                { opacity: 0, x: -30 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 80%",
+                    }
+                }
+            );
+        });
+
+        gsap.fromTo('.credit-card',
+            { scale: 0.8, opacity: 0, rotationX: 10 },
+            {
+                scale: 1,
+                opacity: 1,
+                rotationX: 0,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: 'footer',
+                    start: "top 90%"
+                }
+            }
+        );
+
+    </script>
+</body>
+</html>
